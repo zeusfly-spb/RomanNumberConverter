@@ -6,7 +6,7 @@
           type="text"
           name="string-input"
           v-model="strNumber"
-          @input="filterStrNumber"
+          @input="filterStrNumber(); romanToInt()"
         >
       </label>
       &nbsp;&nbsp;&nbsp;
@@ -17,12 +17,6 @@
           v-model.number="intNumber"
         >
       </label>
-      &nbsp;&nbsp;&nbsp;
-      <button
-        @click="romanToInt"
-      >
-        Считать
-      </button>
     </div>
   </div>
 </template>
@@ -52,22 +46,27 @@ function filterStrNumber() {
 }
 
 function romanToInt() {
+  const digits = JSON.parse(JSON.stringify(signs));
   let result = 0;
   const str = strNumber.value;
   if (!str.length) {
     return result;
   }
   for (let i = str.length; i >= 1; i--) {
-    try {
-      const sign = str[i - 1];
-      signs[sign]['present'] = true;
-      const current = signs[sign];
-      result += current['amount'];
-    } catch (e) {
-      console.log("Error", e.stack);
-      console.log("Error", e.name);
-      console.log("Error", e.message);
+    const sign = str[i - 1];
+    console.log(sign);
+    digits[sign].present = true;
+    const current = digits[sign];
+    const keysAbove = allDigits.value.filter(key => digits[key].value > current.value);
+    if (keysAbove.length) {
+      for(let j = 0; j < keysAbove.length; j++) {
+        if (digits[keysAbove[j]].present) {
+          current.value = - current.value;
+          break;
+        }
+      }
     }
+    result += current.value;
   }
   intNumber.value = result;
 }
