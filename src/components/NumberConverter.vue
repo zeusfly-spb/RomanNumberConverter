@@ -12,10 +12,11 @@
       &nbsp;&nbsp;&nbsp;
       <label for="number-input">Десятичные:
         <input
-          type="text"
+          type="number"
+          min="0"
           id="number-input"
           v-model.number="intNumber"
-          @input="intToRoman"
+          @input="intNumber[0] === 0 ? intNumber = intNumber.substring(1) : null; intToRoman();"
         >
       </label>
     </div>
@@ -81,11 +82,9 @@ function intToRoman() {
         n -= digits[key].value;
       }
     })
-  console.log(result);
-
   try{
     allDigits.value.forEach(key => {
-      const keysAbove = allDigits.value.filter(item => digits[item].value > digits[key].value);
+      const keysAbove = allDigits.value.reverse().filter(item => digits[item].value > digits[key].value);
       if (keysAbove.length) {
         const upperKey = keysAbove[0] || null;
         const higherKey = keysAbove[1] || null;
@@ -97,12 +96,10 @@ function intToRoman() {
         }
       }
     });
-    console.log('returning');
     strNumber.value = result;
   } catch (e) {
     console.log(e.message)
   }
-
 }
 </script>
 
