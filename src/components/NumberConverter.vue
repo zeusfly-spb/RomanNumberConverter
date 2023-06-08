@@ -4,7 +4,7 @@
       <label for="string-input">Римские:
         <input
           type="text"
-          name="string-input"
+          id="string-input"
           v-model="strNumber"
           @input="filterStrNumber(); romanToInt()"
         >
@@ -13,8 +13,9 @@
       <label for="number-input">Десятичные:
         <input
           type="text"
-          name="number-input"
+          id="number-input"
           v-model.number="intNumber"
+          @input="intToRoman"
         >
       </label>
     </div>
@@ -50,11 +51,10 @@ function romanToInt() {
   let result = 0;
   const str = strNumber.value;
   if (!str.length) {
-    return result;
+    intNumber.value = result;
   }
   for (let i = str.length; i >= 1; i--) {
     const sign = str[i - 1];
-    console.log(sign);
     digits[sign].present = true;
     const current = digits[sign];
     const keysAbove = allDigits.value.filter(key => digits[key].value > current.value);
@@ -71,6 +71,39 @@ function romanToInt() {
   intNumber.value = result;
 }
 
+function intToRoman() {
+    let digits = JSON.parse(JSON.stringify(signs));
+    let n = intNumber.value;
+    let result = '';
+    allDigits.value.reverse().forEach(key => {
+      while (n >= digits[key].value) {
+        result += key;
+        n -= digits[key].value;
+      }
+    })
+  console.log(result);
+
+  try{
+    allDigits.value.forEach(key => {
+      const keysAbove = allDigits.value.filter(item => digits[item].value > digits[key].value);
+      if (keysAbove.length) {
+        const upperKey = keysAbove[0] || null;
+        const higherKey = keysAbove[1] || null;
+        if (upperKey) {
+          result = result.replace(key.repeat(4), `${key}${upperKey}`);
+        }
+        if (upperKey && higherKey) {
+          result = result.replace(`${upperKey}${key}${upperKey}`, `${key}${higherKey}`);
+        }
+      }
+    });
+    console.log('returning');
+    strNumber.value = result;
+  } catch (e) {
+    console.log(e.message)
+  }
+
+}
 </script>
 
 <style lang="css" scoped>
