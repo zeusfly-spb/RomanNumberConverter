@@ -1,15 +1,20 @@
 <script setup>
+import { ref } from 'vue'
 
 defineProps({
   msg: String,
 })
 
+const count = ref(0)
 </script>
 
 <template>
   <div class="card">
 
   </div>
+
+
+  <p class="read-the-docs">Click on the Vite and Vue logos to learn more</p>
 </template>
 
 <style scoped>
