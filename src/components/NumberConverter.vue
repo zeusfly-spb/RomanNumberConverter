@@ -31,10 +31,8 @@
 /* eslint-disable no-undef,no-unused-vars */
 import { ref, reactive, computed, onMounted, nextTick } from "vue";
 
-const numbers = reactive({
-  intNumber: 0,
-  strNumber: ''
-});
+const strNumber = ref('');
+const intNumber = ref(0);
 
 const signs = reactive({
   I: { present: false, value: 1 },
@@ -51,33 +49,6 @@ const allDigits = computed(() => Object.keys(signs));
 function filterStrNumber() {
   strNumber.value = strNumber.value.toUpperCase().split('')
     .filter(key => allDigits.value.includes(key)).join('')
-}
-
-const intNumber = computed({
-  get() {
-    return numbers.intNumber;
-  },
-  set(val) {
-    numbers.intNumber = val;
-  }
-});
-
-const strNumber = computed({
-  get() {
-    return numbers.strNumber;
-  },
-  set(val) {
-    numbers.strNumber = val;
-  }
-});
-
-function validateInput(event) {
-  const inputChar = String.fromCharCode(event.keyCode).toUpperCase();
-  if (!allDigits.value.includes(inputChar)) {
-    event.preventDefault();
-  } else {
-    strNumber.value += inputChar;
-  }
 }
 
 function romanToInt() {
